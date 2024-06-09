@@ -2,7 +2,7 @@
 title: BlackField HackTheBox Writeup 
 date: 2024-06-09
 categories: [HackTheBox]
-tags: [pentest, htb, ctf]
+tags: [pentest, htb, ctf, oscp]
 ---
 
 <figure><img src="/assets/HTB/Blackfield/blackfield.png" alt="Banner"></figure>
