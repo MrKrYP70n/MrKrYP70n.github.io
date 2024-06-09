@@ -16,7 +16,7 @@ timezone: Asia/Calcutta
 
 title: Gaurav Choudhari # the main title
 
-tagline: Security Researcher # it will display as the sub-title
+tagline: OSCP | CCT | Security Researcher # it will display as the sub-title
 
 description: >- # used by seo meta and the atom feed
   A blog focused on Red Teaming, Penetration Tesing, and Offensive Security.
