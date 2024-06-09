@@ -68,11 +68,11 @@ OS and Service detection performed. Please report any incorrect results at https
 
 It was allowing no user and pass login but not listing the shares :
 
-![Untitled](Blackfield%20(10%2010%2010%20192)%20bbea2d11d4634242882929b25f8b6d5a/Untitled.png)
+<figure><img src="/assets/HTB/Blackfield/Untitled.png" alt="CME Check"></figure>
 
 But using the guest account, I was able to list the shares :
 
-![Untitled](Blackfield%20(10%2010%2010%20192)%20bbea2d11d4634242882929b25f8b6d5a/Untitled%201.png)
+<figure><img src="/assets/HTB/Blackfield/Untitled%201.png" alt="CME guest account Check"></figure>
 
 Connected using SMBCLIENT :
 
@@ -258,9 +258,9 @@ INFO: Done in 00M 28S
 
 After analyzing through bloodhound and found that we can change the password of the user `audit2020`
 
-![Untitled](Blackfield%20(10%2010%2010%20192)%20bbea2d11d4634242882929b25f8b6d5a/Untitled%202.png)
+<figure><img src="/assets/HTB/Blackfield/Untitled%202.png" alt="BloodHound"></figure>
 
-![Untitled](Blackfield%20(10%2010%2010%20192)%20bbea2d11d4634242882929b25f8b6d5a/Untitled%203.png)
+<figure><img src="/assets/HTB/Blackfield/Untitled%203.png" alt="Bloodhound Graph"></figure>
 
 To change the password of the user can use the following command :
 
@@ -270,17 +270,17 @@ net rpc password "audit2020" "password@123" -U "Blackfield"/"support"%"#00^Black
 
 The command ran successfully, we can check it using cme
 
-![Untitled](Blackfield%20(10%2010%2010%20192)%20bbea2d11d4634242882929b25f8b6d5a/Untitled%204.png)
+<figure><img src="/assets/HTB/Blackfield/Untitled%204.png" alt="CME Check"></figure>
 
 Now we have access to `forensic` share.
 
 Now I’m downloading all the files :
 
-![Untitled](Blackfield%20(10%2010%2010%20192)%20bbea2d11d4634242882929b25f8b6d5a/Untitled%205.png)
+<figure><img src="/assets/HTB/Blackfield/Untitled%205.png" alt="Download"></figure>
 
 In the memory_analysis directory there was a dump files.
 
-![Untitled](Blackfield%20(10%2010%2010%20192)%20bbea2d11d4634242882929b25f8b6d5a/Untitled%206.png)
+<figure><img src="/assets/HTB/Blackfield/Untitled%206.png" alt="Memory Dump"></figure>
 
 `lsass.zip` file was interesting, so I transferred it to my device using `smbclient.py` 
 
@@ -315,7 +315,7 @@ drw-rw-rw-          0  Fri May 29 01:59:24 2020 ..
 # exit
 ```
 
-![Untitled](Blackfield%20(10%2010%2010%20192)%20bbea2d11d4634242882929b25f8b6d5a/Untitled%207.png)
+<figure><img src="/assets/HTB/Blackfield/Untitled%207.png" alt="listing"></figure>
 
 Then analyzed the file with `pypykatz`
 
@@ -364,19 +364,18 @@ logon_server
 
 I tried Administrator hash but it was not valid but svc_backup hash worked.
 
-![Untitled](Blackfield%20(10%2010%2010%20192)%20bbea2d11d4634242882929b25f8b6d5a/Untitled%208.png)
-
+<figure><img src="/assets/HTB/Blackfield/Untitled%208.png" alt="svc_backup"></figure>
 Using `evil-winrm` to connect to the target, and fetched the flag
 
 ```terminal
 evil-winrm -i 10.10.10.192 -u svc_backup -H 9658d1d1dcd9250115e2205d9f48400d
 ```
 
-![Untitled](Blackfield%20(10%2010%2010%20192)%20bbea2d11d4634242882929b25f8b6d5a/Untitled%209.png)
+<figure><img src="/assets/HTB/Blackfield/Untitled%209.png" alt="winrm"></figure>
 
 SVC_BACKUP is a part of `Backup operators` Groups.
 
-![Untitled](Blackfield%20(10%2010%2010%20192)%20bbea2d11d4634242882929b25f8b6d5a/Untitled%2010.png)
+<figure><img src="/assets/HTB/Blackfield/Untitled%2010.png" alt="Groups"></figure>
 
 Abusing the Backup Operators Groups :
 
@@ -601,4 +600,4 @@ SMB         10.10.10.192    445    DC01             [*] Windows 10.0 Build 17763
 SMB         10.10.10.192    445    DC01             [+] BLACKFIELD.local\administrator:184fb5e5178480be64824d4cd53b99ee (Pwn3d!)
 ```
 
-![Untitled](Blackfield%20(10%2010%2010%20192)%20bbea2d11d4634242882929b25f8b6d5a/Untitled%2011.png)
+<figure><img src="/assets/HTB/Blackfield/Untitled%2011.png" alt="Pwned"></figure>
