@@ -4,7 +4,7 @@ order: 1
 ---
 
 <div style="text-align: center;">
-    <img src="../assets/gaurav.png" style="border-radius: 50%; border: 2px solid #FFC0CB; box-shadow: 0 0 25px 0 rgba(255, 192, 203, 0.5); width: 400px; height: 400px;" alt="placeholder_img">
+    <img src="../assets/gaurav.jpg" style="border-radius: 50%; border: 2px solid #FFC0CB; box-shadow: 0 0 25px 0 rgba(255, 192, 203, 0.5); width: 400px; height: 400px;" alt="placeholder_img">
 
     <p>Hi, I'm <strong>Gaurav</strong>.</p>
 </div>
