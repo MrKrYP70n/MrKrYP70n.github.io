@@ -8,4 +8,5 @@ group :test do
   gem "html-proofer", "~> 5.0"
   gem "tzinfo"
   gem "tzinfo-data"
+  gem "wdm"
 end
