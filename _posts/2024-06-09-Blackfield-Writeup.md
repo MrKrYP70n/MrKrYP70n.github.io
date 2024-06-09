@@ -2,10 +2,12 @@
 title: BlackField HackTheBox Writeup 
 date: 2024-06-09
 categories: [HackTheBox]
-tags: [pentest, htb, ctf, oscp]
+tags: [Pentest, HTB, CTF, OSCP, AD]
 ---
 
 <figure><img src="/assets/HTB/Blackfield/blackfield.png" alt="Banner"></figure>
+
+Backfield is a hard difficulty Windows machine featuring Windows and Active Directory misconfigurations. This box covered attacks like AS-REP Roasting and some ACL abuse techniques later discussed.
 
 ## Recon (10.10.10.192)
 
