@@ -11,4 +11,4 @@ order: 1
 
 I am an Security Researcher and Red Teamer. I find joy in fiddling with websites and applications, trying to break them.
 
-[Github](https://x.com/MrKryp70n) /\ [Twitter](https://x.com/MrKryp70n) /\ [Linkedin](https://x.com/MrKryp70n)
+[Github](https://github.com/MrKrYP70n)  /\  [Twitter](https://x.com/MrKryp70n)  /\  [Linkedin](https://www.linkedin.com/in/0xgaurav/)
