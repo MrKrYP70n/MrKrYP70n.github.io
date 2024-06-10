@@ -1,7 +1,7 @@
 ---
 title: BlackField HackTheBox Writeup 
 date: 2024-06-09
-categories: [HackTheBox, OSCP]
+categories: [HackTheBox]
 tags: [Pentest, HTB, CTF, OSCP, AD]
 ---
 
