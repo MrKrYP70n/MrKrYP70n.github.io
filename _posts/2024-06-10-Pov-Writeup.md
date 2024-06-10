@@ -219,7 +219,7 @@ Then ran rev.exe and got the shell on meterpreter :
 
 ## Administrator 
 
-### Abusing SeDebugPrivileges :
+### Abusing SeDebugPrivileges
 
 
 |**Filename** | Links|
@@ -227,6 +227,11 @@ Then ran rev.exe and got the shell on meterpreter :
 |  EnableAllTokenPrivs.ps1| https://raw.githubusercontent.com/fashionproof/EnableAllTokenPrivs/master/EnableAllTokenPrivs.ps1 |
 
 Now using `certutil` the ps script is transferred.
+
+Then run the script by dot sourcing i.e 
+```powershell
+. .\EnableAllTokenPrivs.ps1
+```
 
 <figure><img src="/assets/HTB/Pov/Pasted image 20240203152238.png" alt="Banner"></figure>
 
