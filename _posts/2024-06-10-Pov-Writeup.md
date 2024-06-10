@@ -2,7 +2,7 @@
 title: PoV HackTheBox Writeup 
 date: 2024-06-10
 categories: [HackTheBox]
-tags: [Pentest, HTB, CTF, OSCP]
+tags: [Pentest, HTB, CTF, OSCP, Windows]
 ---
 
 <figure><img src="/assets/HTB/Pov/Pov.png" alt="Banner"></figure>
