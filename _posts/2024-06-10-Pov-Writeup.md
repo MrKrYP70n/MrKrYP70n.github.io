@@ -1,11 +1,13 @@
 ---
-title: BlackField HackTheBox Writeup 
+title: PoV HackTheBox Writeup 
 date: 2024-06-10
 categories: [HackTheBox]
 tags: [Pentest, HTB, CTF, OSCP]
 ---
 
 <figure><img src="/assets/HTB/Pov/Pov.png" alt="Banner"></figure>
+
+Pov is a medium level Windows box on hackthebox. The Lateral Movement was very fun and might be helpful for the OSCP students. This walkthrough contains subdomain enumeration, finding vulnerability in ASP older version. For Lateral movement there was a PS Credential Object file and the Administrator access has to be gained by abusing SeDebugPrivs.  
 
 ## Recon (10.10.11.251)
 
@@ -234,6 +236,8 @@ Now using `certutil` the ps script is transferred.
 4. run shell
 
 <figure><img src="/assets/HTB/Pov/Pasted image 20240203152543.png" alt="Banner"></figure>
+
+Good Luck! ^w^
 
 type root.txt
 
