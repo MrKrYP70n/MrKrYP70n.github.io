@@ -6,6 +6,7 @@ tags: [Pentest, HTB, CTF, OSCP, Linux]
 ---
 
 # Lame (10.10.10.3)
+<figure><img src="/assets/HTB/Lame/Lame.png" alt="Banner"></figure>
 
 Lame is a very easy HTB machine and a part of old TJ Null list (2021). It requires only one exploit to root the machine. The following exploit can be easily executed with Metasploit or we can use the public exploit script to get the shell as well.
 
@@ -15,7 +16,7 @@ Lame is a very easy HTB machine and a part of old TJ Null list (2021). It requir
 
 Getting started with nmap scan first
 
-![Untitled](Lame%203ee145cbcc7f4e33b4e117343d4b1292/Untitled.png)
+<figure><img src="/assets/HTB/Lame/Untitled.png" alt="Banner"></figure>
 
 Then I ran the full vuln nmap scan and got this output. 
 
@@ -91,7 +92,7 @@ So, I left that and started enumerating SSH version
 
 It is vulnerable to bruteforce attack, but machine was not made to exploit it that way and also the bruteforce was taking it too long 😞
 
-![Untitled](Lame%203ee145cbcc7f4e33b4e117343d4b1292/Untitled%201.png)
+<figure><img src="/assets/HTB/Lame/Untitled 1.png" alt="Banner"></figure>
 
 It didn’t worked out well. So, I moved on to SMB Enum
 
@@ -100,7 +101,7 @@ It didn’t worked out well. So, I moved on to SMB Enum
 I searced for its version and found the exploit.
 
 
-![Untitled](Lame%203ee145cbcc7f4e33b4e117343d4b1292/Untitled%202.png)
+<figure><img src="/assets/HTB/Lame/Untitled 2.png" alt="Banner"></figure>)
 
 [Msf Exploit Link](https://www.rapid7.com/db/modules/exploit/multi/samba/usermap_script/) - You can follow the exact steps to get it running and root the box.
 
@@ -108,8 +109,8 @@ I searced for its version and found the exploit.
 
 And the first msf exploit worked and I got root.
 
-![Untitled](Lame%203ee145cbcc7f4e33b4e117343d4b1292/Untitled%203.png)
+<figure><img src="/assets/HTB/Lame/Untitled 3.png" alt="Banner"></figure>
 
 GG Rooted 🙂
 
-![Untitled](Lame%203ee145cbcc7f4e33b4e117343d4b1292/Untitled%204.png)
+<figure><img src="/assets/HTB/Lame/Untitled 4.png" alt="Banner"></figure>
