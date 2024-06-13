@@ -1,6 +1,6 @@
 ---
 title: Lame HackTheBox Writeup 
-date: 2024-06-09
+date: 2024-06-13
 categories: [HackTheBox]
 tags: [Pentest, HTB, CTF, OSCP, Linux]
 ---
