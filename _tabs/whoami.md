@@ -9,6 +9,6 @@ order: 1
     <p>Hi, I'm <strong>Gaurav</strong>.</p>
 </div>
 
-I am an Security Researcher and Red Teamer. I find joy in fiddling with websites and applications, trying to break them.
+I am an Security Researcher. I find joy in reversing hardware and softwares <3.
 
 [Github](https://github.com/MrKrYP70n)  /\  [Twitter](https://x.com/MrKryp70n)  /\  [Linkedin](https://www.linkedin.com/in/0xgaurav/)
