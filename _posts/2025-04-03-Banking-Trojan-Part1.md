@@ -50,5 +50,11 @@ So let's take a look at the `AndroidManifest.xml`.
 
 <strong>Things to note:</strong>
 ```
+<uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
 
+<package android:name="indieba.indi.indi"/>
+
+android:name="indi.c.c.indichedgvyhedg"
 ```
+
+  
