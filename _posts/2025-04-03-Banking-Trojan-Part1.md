@@ -5,7 +5,7 @@ categories: [Reverse Engineering]
 tags: [Malware, Reverse Engineering, Apk]
 ---
 
-Hi Everyone, In this blog we are going to look at the malicious android application that I got on text which looked like this.
+Hi Everyone, In this blog we are going to look at the malicious android application that my friend got on text.
 
 <figure><center><img src="/assets/Malware/Banking-Trojan/Malicious.jpg" alt="Banner"  width="252" height="500"></center></figure>
 
