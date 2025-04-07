@@ -77,3 +77,10 @@ After this part, it's totally optional so you can skip to next part as we have e
 
 ## Dynamic Analysis
 
+For dynamic analysis, I quickly booted up the android device using genymotion running Andriod 11 ... because the genymotion only support the root access upto Android 11 version for the free users. 
+
+Install the apk into the android device just by dropping the file(`apk`) on the device. If you look into the application the drawer the application is installed.
+<figure><img src="/assets/Malware/Banking-Trojan/Application_Install.png" alt="APK install"></figure>
+
+Let's take a look at the application and simultaneously look at the already installed packages using the `adb shell`. To look at the installed packages you can simply go to `/data/data` inside the android device.  
+<figure><img src="/assets/Malware/Banking-Trojan/Package_Listing.png" alt="list packages"></figure>
