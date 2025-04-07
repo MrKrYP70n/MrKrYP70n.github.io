@@ -49,6 +49,7 @@ So let's take a look at the `AndroidManifest.xml`.
 <figure><img src="/assets/Malware/Banking-Trojan/AndroidManifestXml.png" alt="AndroidManifestXML"></figure>
 
 <strong>Things to note:</strong>
+
 ```
 <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
 
@@ -57,4 +58,15 @@ So let's take a look at the `AndroidManifest.xml`.
 android:name="indi.c.c.indichedgvyhedg"
 ```
 
-  
+Looking at the permission we can conclude that the application is trying to install packages. It’s likely used to drop secondary payloads, dynamically extending the trojan’s capabilities post-installation. This technique is commonly used to evade detection by dynamic analysis sandboxes and static scanners, as the full malicious behavior is deferred until after the initial app is installed. And the `indi.c.c.indichedgvyhedg` is the entry point of the android application.
+
+Now, let's take a look at the class `indi.c.c.indichedgvyhedg`:
+
+<figure><img src="/assets/Malware/Banking-Trojan/mainFunction.png" alt="Main Function"></figure>
+
+The app is basically trying to install 👀 `base.apk` and it was just a stager application. It is first creating a `PackageInstaller.Session`, which enables the application to install the base.apk that is most probably bundled within the assets or dropped somewhere in internal storage.
+
+## Getting the Main Payload (Stage 2)
+
+In the `Resources > assets` folder we can find the `base.apk` that is being installed. We can simply export the base.apk and start the analysis.
+<figure><img src="/assets/Malware/Banking-Trojan/Stage_2_baseapk.png" alt="Base APK"></figure>
