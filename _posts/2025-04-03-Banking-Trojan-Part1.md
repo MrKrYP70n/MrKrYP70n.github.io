@@ -70,3 +70,10 @@ The app is basically trying to install 👀 `base.apk` and it was just a stager 
 
 In the `Resources > assets` folder we can find the `base.apk` that is being installed. We can simply export the base.apk and start the analysis.
 <figure><img src="/assets/Malware/Banking-Trojan/Stage_2_baseapk.png" alt="Base APK"></figure>
+
+There is one more way to extract the apk i.e by using the dynamic analysis(adb pull). So let's take a look into it :) 
+
+After this part, it's totally optional so you can skip to next part as we have extracted the main payload apk.
+
+## Dynamic Analysis
+
