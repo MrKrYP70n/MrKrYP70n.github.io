@@ -9,7 +9,7 @@ Hi Everyone, In this blog we are going to look at the malicious android applicat
 
 <figure><center><img src="/assets/Malware/Banking-Trojan/Malicious.jpg" alt="Banner"  width="252" height="500"></center></figure>
 
-We are going to look at the behaviour and the capabilities of the malicious application. If you look at the message, the malicious actor has tried to create a sense of urgency. Any normal user would have fallen for that. So let's started with analyzing how the application is working.
+We are going to look at the behaviour and the capabilities of the malicious application. If you look at the message, the malicious actor has tried to create a sense of urgency to lure normal user. So let's started with analyzing how the application is working.
 
 ## Basic Analysis
 
@@ -23,7 +23,7 @@ MD5 : 89169d7f297915abda2a0d8a0933f981
  
 SHA-1 : fe329b52e6b9f9638e67b334ee49f7dfb5cb52a7
 
-SHA-256 Hash: 9de2b7bdfec291cf6d091f01494be5203a90d2672f4bf37948e7d638471ae801
+SHA-256 : 9de2b7bdfec291cf6d091f01494be5203a90d2672f4bf37948e7d638471ae801
 
 File Name: Indusind Bank i09.apk
 
@@ -42,3 +42,13 @@ By analyzing these details, I could get an initial understanding of the applicat
 
 ## Static Analysis
 
+To statically analyze the application, I opened the application in `jadx-gui`. JADX GUI is a user-friendly tool for reverse-engineering Android APKs by decompiling DEX (Dalvik Executable) files into readable Java source code. It provides a graphical interface to explore an APK's structure, making it easier to analyze its components.
+
+So let's take a look at the `AndroidManifest.xml`. 
+
+<figure><img src="/assets/Malware/Banking-Trojan/AndroidManifestXml.png" alt="AndroidManifestXML"></figure>
+
+<strong>Things to note:</strong>
+```
+
+```
