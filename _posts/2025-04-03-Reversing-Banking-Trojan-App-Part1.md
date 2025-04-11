@@ -113,7 +113,7 @@ adb pull /data/app/~~Su_VVjKhEupprJkdzWoDSQ==/indieba.indi.indi-dCswx4yWRVLkD5AY
 ```
 <figure><img src="/assets/Malware/Banking-Trojan/ADB_Pull.png" alt="Pulling Package from the APK"></figure>
 
-Now we can start analysing the main application :) See you in the next part where I am going to analyze the main payload ..... tracking the threat actor, identifying IoCs and Attack Path.
+Now we can start analysing the main application :) See you in the next part where I am going to analyze the main payload ..... trying to track the threat actor, identifying IoCs and Attack Path.
 
 
     ^w^ 
