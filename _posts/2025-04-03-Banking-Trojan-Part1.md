@@ -66,7 +66,7 @@ Now, let's take a look at the class `indi.c.c.indichedgvyhedg`:
 
 The app is basically trying to install 👀 `base.apk` and it was just a stager application. It is first creating a `PackageInstaller.Session`, which enables the application to install the base.apk that is most probably bundled within the assets or dropped somewhere in internal storage.
 
-## Getting the Main Payload (Stage 2)
+## Getting the Main Payload (Second Stage)
 
 In the `Resources > assets` folder we can find the `base.apk` that is being installed. We can simply export the base.apk and start the analysis.
 <figure><img src="/assets/Malware/Banking-Trojan/Stage_2_baseapk.png" alt="Base APK"></figure>
@@ -83,6 +83,8 @@ Install the apk into the android device just by dropping the file(`apk`) on the 
 <figure><center><img src="/assets/Malware/Banking-Trojan/Application_Install.png" alt="APK install" width="390" height="580"></center></figure>
 
 Let's take a look at the application and the already installed packages simultaneously using the `adb shell`. To look at the installed packages you can simply go to `/data/data` inside the android device. Note the `indi.c.c` package.
+
+## Pulling the APK from device
 
 <figure><img src="/assets/Malware/Banking-Trojan/Package_Listing.png" alt="list packages"></figure>
 
