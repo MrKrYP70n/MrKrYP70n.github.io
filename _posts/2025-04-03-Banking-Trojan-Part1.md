@@ -82,5 +82,12 @@ For dynamic analysis, I quickly booted up the android device using genymotion ru
 Install the apk into the android device just by dropping the file(`apk`) on the device. If you look into the application the drawer the application is installed.
 <figure><center><img src="/assets/Malware/Banking-Trojan/Application_Install.png" alt="APK install" width="390" height="580"></center></figure>
 
-Let's take a look at the application and simultaneously look at the already installed packages using the `adb shell`. To look at the installed packages you can simply go to `/data/data` inside the android device.  
+Let's take a look at the application and the already installed packages simultaneously using the `adb shell`. To look at the installed packages you can simply go to `/data/data` inside the android device. Note the `indi.c.c` package.
+
 <figure><img src="/assets/Malware/Banking-Trojan/Package_Listing.png" alt="list packages"></figure>
+
+If we click on the Proceed to install, it will ask for the permission to install unknown packages. We also saw this while doing the static analysis
+
+<figure><center><img src="/assets/Malware/Banking-Trojan/Installation Source.png" alt="Install Unknown packages" width="390" height="580"></center></figure>
+
+After approving, in the app it will ask for downloading the another application, which is very suspicious and these is where the malicious application presents. 
