@@ -88,7 +88,7 @@ Let's take a look at the application and the already installed packages simultan
 
 <figure><img src="/assets/Malware/Banking-Trojan/Package_Listing.png" alt="list packages"></figure>
 
-If we click on the Proceed to install, it will ask for the permission to install unknown packages. We also saw this permission while doing the static analysis.
+If we click on the Proceed to install, it will ask for the permission to install unknown packages. We also saw this permission while doing the static analysis in AndroidManifest.xml.
 
 <figure><center><img src="/assets/Malware/Banking-Trojan/Installation Source.png" alt="Install Unknown packages" width="390" height="580"></center></figure>
 
@@ -113,4 +113,8 @@ adb pull /data/app/~~Su_VVjKhEupprJkdzWoDSQ==/indieba.indi.indi-dCswx4yWRVLkD5AY
 ```
 <figure><img src="/assets/Malware/Banking-Trojan/ADB_Pull.png" alt="Pulling Package from the APK"></figure>
 
+Now we can start analysing the main application :) See you in the next part where I am going to analyze the main payload ..... tracking the threat actor, identifying IoCs and Attack Path.
 
+
+    ^w^ 
+with <3
