@@ -100,7 +100,7 @@ As this a virtual environment, so I proceed to install the application. After th
 
 <figure><img src="/assets/Malware/Banking-Trojan/Installed_Packages_update.png" alt="list packages"></figure>
 
-Now there are 2 packages 👀 .... `indi.c.c` and the new one `indieba.indi.indi`. That means the new package was installed with the similar package name and app icon to avoid the suspision of the normal user.
+Now there are 2 packages 👀 .... `indi.c.c` and the new one `indieba.indi.indi`. The new package was installed with the similar package name and app icon to avoid the suspision of the normal user.
 
 Let's pull the application from the running device. To do that you can use the following commands:
 
