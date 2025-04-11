@@ -86,8 +86,29 @@ Let's take a look at the application and the already installed packages simultan
 
 <figure><img src="/assets/Malware/Banking-Trojan/Package_Listing.png" alt="list packages"></figure>
 
-If we click on the Proceed to install, it will ask for the permission to install unknown packages. We also saw this while doing the static analysis
+If we click on the Proceed to install, it will ask for the permission to install unknown packages. We also saw this permission while doing the static analysis.
 
 <figure><center><img src="/assets/Malware/Banking-Trojan/Installation Source.png" alt="Install Unknown packages" width="390" height="580"></center></figure>
 
 After approving, in the app it will ask for downloading the another application, which is very suspicious and these is where the malicious application presents. 
+
+<figure><center><img src="/assets/Malware/Banking-Trojan/Appinstall.png" alt="Malicious application install" width="390" height="580"></center></figure>
+
+As this a virtual environment, so I proceed to install the application. After the installation, I took a look at the installed packages using `adb shell` in `/data/data` directory. 
+
+<figure><img src="/assets/Malware/Banking-Trojan/Installed_Packages_update.png" alt="list packages"></figure>
+
+Now there are 2 packages 👀 .... `indi.c.c` and the new one `indieba.indi.indi`. That means the new package was installed with the similar package name and app icon to avoid the suspision of the normal user.
+
+Let's pull the application from the running device. To do that you can use the following commands:
+
+```
+adb shell pm list packages      // To determine the package name of the app
+
+adb shell pm path indieba.indi.indi        // To get the full path name of the APK
+
+adb pull /data/app/~~Su_VVjKhEupprJkdzWoDSQ==/indieba.indi.indi-dCswx4yWRVLkD5AYeD-IIA==/base.apk payload.apk        // To copy the apk to our pc.
+```
+<figure><img src="/assets/Malware/Banking-Trojan/ADB_Pull.png" alt="Pulling Package from the APK"></figure>
+
+
