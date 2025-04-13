@@ -9,7 +9,7 @@ Hi Everyone, In this blog we are going to look at the malicious android applicat
 
 <figure><center><img src="/assets/Malware/Banking-Trojan/Malicious.jpg" alt="Banner"  width="252" height="500"></center></figure>
 
-We are going to look at the behaviour and the capabilities of the malicious application. If you look at the message, the malicious actor has tried to create a sense of urgency to lure normal user. So let's started with analyzing how the application is working.
+We are going to look at the behaviour and the capabilities of the malicious application. If you look at the message, the malicious actor has tried to create a sense of urgency to lure normal user. So let's get started with analyzing how the application is working.
 
 ## Basic Analysis
 
