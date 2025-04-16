@@ -71,4 +71,65 @@ Looking at the function, strings seems to be encoded/obfuscated using some kind 
 
 <figure><img src="/assets/Malware/Banking-Trojan/Obfuscate.png" alt="Obfuscation"></figure>
 
+The decode function is performing a XOR operation on the hex encoded string with the key `npmanager` which is hardcoded in the defined function. Using cyberchef I tried to decode those strings and I was successfully able to decode those strings :) 
 
+<figure><img src="/assets/Malware/Banking-Trojan/Cyberchef.png" alt="Cyberchef"></figure>
+
+It was very tiring to manually decode those strings and analyze them using cyberchef, so I created a python script to decode that for me and simply overwrite the encoding strings with the decoded one. 
+
+```python
+import os
+import re
+
+INPUT_DIR = "extracted_apk"  # Change name with the extracted apk folder name
+XOR_KEY = "npmanager"
+
+def xor_decrypt(hex_string, key):
+    key_bytes = key.encode()
+    data = bytes.fromhex(hex_string)
+    decrypted = bytes([b ^ key_bytes[i % len(key_bytes)] for i, b in enumerate(data)])
+    return decrypted.decode(errors="ignore")
+
+def patch_files_with_decoded_strings(input_dir):
+    pattern = re.compile(r'NPStringFog\.decode\("([0-9a-fA-F]+)"\)')
+    patched_files = 0
+    for root, _, files in os.walk(input_dir):
+        for file in files:
+            if file.endswith(".java") or file.endswith(".smali"):
+                file_path = os.path.join(root, file)
+                with open(file_path, 'r', errors='ignore') as f:
+                    content = f.read()
+
+                matches = pattern.findall(content)
+                if not matches:
+                    continue
+
+                for hex_str in matches:
+                    try:
+                        decrypted = xor_decrypt(hex_str, XOR_KEY)
+                        original = f'NPStringFog.decode("{hex_str}")'
+                        replacement = f'"{decrypted}"'
+                        content = content.replace(original, replacement)
+                    except Exception as e:
+                        print(f"[!] Failed to decrypt {hex_str}: {e}")
+
+                with open(file_path, 'w') as f:
+                    f.write(content)
+                patched_files += 1
+
+    print(f"[+] Patched {patched_files} files.")
+
+if __name__ == "__main__":
+    patch_files_with_decoded_strings(INPUT_DIR)
+
+```
+
+First you have to decompile the apk. You can use `apktool`, `jdax` or `jadx-gui` to extract and decompile all those files. Then change the 4th line of the code with extracted folder name and run the script.
+
+You will see the output like this: 
+
+<figure><img src="/assets/Malware/Banking-Trojan/decode.png" alt="Decoded"></figure>
+
+Now let's open the folder the open and those earlier obfuscated classes in any text editor. I personally like the VSCode. 
+
+<figure><img src="/assets/Malware/Banking-Trojan/Decoded_files.png" alt="Decoded Files"></figure>
