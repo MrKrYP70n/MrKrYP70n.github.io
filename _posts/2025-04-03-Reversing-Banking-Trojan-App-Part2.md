@@ -39,7 +39,7 @@ To statically analyze the application, I used `jadx-gui` to extract and decompil
 
 <figure><img src="/assets/Malware/Banking-Trojan/AndroidManifestXml2.png" alt="AndroidManifest XML"></figure>
 
-A key point about this app is that it can't be launched directly by the user from the home screen. For an Android app to show up in the launcher, it must include the android.intent.category.LAUNCHER within an <intent-filter> in the AndroidManifest.xml. Since this app lacks that configuration, its icon doesn't appear in the app drawer. As a result, after it's installed and opened—perhaps through a phishing message—users might not notice it's still present on their device, even after closing it.
+A key point about this app is that it can't be launched directly by the user from the home screen. For an Android app to show up in the launcher, it must include the `android.intent.category.LAUNCHER` within an <intent-filter> in the `AndroidManifest.xml`. Since this app lacks that configuration, its icon doesn't appear in the app drawer. As a result, after it's installed and opened—perhaps through a phishing message—users might not notice it's still present on their device, even after closing it.
 
 <strong>Things to note:</strong>
 
