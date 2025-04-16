@@ -39,6 +39,8 @@ To statically analyze the application, I used `jadx-gui` to extract and decompil
 
 <figure><img src="/assets/Malware/Banking-Trojan/AndroidManifestXml2.png" alt="AndroidManifest XML"></figure>
 
+A key point about this app is that it can't be launched directly by the user from the home screen. For an Android app to show up in the launcher, it must include the android.intent.category.LAUNCHER within an <intent-filter> in the AndroidManifest.xml. Since this app lacks that configuration, its icon doesn't appear in the app drawer. As a result, after it's installed and opened—perhaps through a phishing message—users might not notice it's still present on their device, even after closing it.
+
 <strong>Things to note:</strong>
 
 ```xml
@@ -61,7 +63,7 @@ Main activity:
     android:name="indieba.indi.indi.myodyrurjpvobweyo"
 ```
 
-The permission that is asking is very dangerous, granting the access will give the attacker basically full control over the device. The attacker can send/read/recieve messages, the permission `android.permission.FOREGROUND_SERVICE`, `android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`, `android.permission.FOREGROUND_SERVICE_DATA_SYNC` allows attacker to continously run the app in the backgroud irrespective of restrictions like battery optimizations, the app will continiously send the data to the attacker.
+The permission that is asking is very dangerous, granting the access will give the attacker basically full control over the device. The attacker can send/read/recieve messages, the permission `android.permission.FOREGROUND_SERVICE`, `android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`, `android.permission.FOREGROUND_SERVICE_DATA_SYNC` allows attacker to continously run the app in the backgroud irrespective of restrictions like battery optimizations, the app will continiously send the data to the attacker.\
 
 Now the main question is where and how the data is being sent to the attacker because there is no point of collecting this much data and not sending it anywhere ..... this sparked my intrest more to reverse enginner the application, So I looked at the main activity `indieba.indi.indi.myodyrurjpvobweyo`.
 
@@ -239,5 +241,6 @@ In the `myodyrurjpvobweyo` function there was a intresting JScode :
 
 ```
 
-This JS function shows that the application is collecting the data and sending it to the attacker via telegram bots. We can see the telegram bot tokens and the chat ids, that the application is using to sending the data. One more thing to note is this base64 encoded string `aHR0cHM6Ly9zdWJtaXQub3R0Z29vZHMuc2hvcC9wb3N0LnBocA==` which results in `https[://]submit.ottgoods.shop/post.php`. So this is the endpoint that it is connecting too. Unfortunately it was not reachable... otherwise we could have done further analysis. But we have enough information to conclude the intent of this malware.
+This JS function shows that the application is collecting the data and sending it to the attacker via telegram bots. We can see the telegram bot tokens and the chat ids, that the application is using to sending the data. One more thing to note is this base64 encoded string `aHR0cHM6Ly9zdWJtaXQub3R0Z29vZHMuc2hvcC9wb3N0LnBocA==` which results in `https[://]submit.ottgoods.shop/post.php`. So this is the endpoint that it is connecting too. Unfortunately it was not reachable... otherwise we could have done further analysis. Still we have enough information to conclude the intent of this malware.
 
+ 
