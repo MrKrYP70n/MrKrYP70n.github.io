@@ -67,6 +67,8 @@ Now the main question is where and how the data is being sent to the attacker be
 
 <figure><img src="/assets/Malware/Banking-Trojan/Malware_main.png" alt="Main Function"></figure>
 
+## Decoding the Strings
+
 Looking at the function, strings seems to be encoded/obfuscated using some kind of algorithm..... and intresting thing to note is that these strings were following this `NPStringFog.decode("<hex_string_possibly>")` pattern. The string is being decoded by the NPStringFog class, so let's take a look a the class and try to reverse engineer it. 
 
 <figure><img src="/assets/Malware/Banking-Trojan/Obfuscate.png" alt="Obfuscation"></figure>
@@ -133,3 +135,5 @@ You will see the output like this:
 Now let's open the folder the open and those earlier obfuscated classes in any text editor. I personally like the VSCode. 
 
 <figure><img src="/assets/Malware/Banking-Trojan/Decoded_files.png" alt="Decoded Files"></figure>
+
+All the strings within those flies are now decoded and we can analyse the application with ease. After analysing different files, I found one most intresting thing and conclude that these apk was using telegram as a C2 server. 
