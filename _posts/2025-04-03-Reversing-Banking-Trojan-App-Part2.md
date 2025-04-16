@@ -67,4 +67,8 @@ Now the main question is where and how the data is being sent to the attacker be
 
 <figure><img src="/assets/Malware/Banking-Trojan/Malware_main.png" alt="Main Function"></figure>
 
+Looking at the function, strings seems to be encoded/obfuscated using some kind of algorithm..... and intresting thing to note is that these strings were following this `NPStringFog.decode("<hex_string_possibly>")` pattern. The string is being decoded by the NPStringFog class, so let's take a look a the class and try to reverse engineer it. 
+
+<figure><img src="/assets/Malware/Banking-Trojan/Obfuscate.png" alt="Obfuscation"></figure>
+
 
