@@ -139,7 +139,7 @@ Now let's open the folder the open and those earlier obfuscated classes in any t
 All the strings within those files are now decoded and we can analyse the application with ease. After analysing different files, I found one most intresting thing and conclude that these apk was using telegram as a C2 server. 
 
 In the `myodyrurjpvobweyo` function there was a intresting JScode :
-```javscript
+```javascript
 String jsCode = "(function fn_SzP7() {
     function fn_Kn9S(str) {
         return atob(str);
