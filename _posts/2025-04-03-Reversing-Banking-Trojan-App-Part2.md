@@ -1,6 +1,6 @@
 ---
 title: Analyzing Banking Trojan - Reversing Apk (Part 2)
-date: 2025-04-17
+date: 2025-04-16
 categories: [Reverse Engineering]
 tags: [Malware, Reverse Engineering, Apk]
 ---
